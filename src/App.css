@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=VT323&display=swap');
 
 * {
   margin: 0;
@@ -67,12 +67,15 @@ h1 {
   font-variant-numeric: tabular-nums;
   line-height: 1;
   letter-spacing: -0.02em;
-  transition: color 0.4s ease;
+  transition: color 0.4s ease, font-family 0.1s;
   user-select: none;
 }
 
 .time--running {
-  color: #f0f0f0;
+  font-family: 'VT323', monospace;
+  font-size: 6.5rem;
+  color: #c8c8c8;
+  letter-spacing: 0.04em;
 }
 
 /* Schatting indicator naast de lopende timer */
@@ -111,7 +114,7 @@ h1 {
   font-size: 0.6rem;
   font-weight: 600;
   letter-spacing: 0.2em;
-  color: #2a2a2a;
+  color: #484848;
   white-space: nowrap;
 }
 
@@ -216,16 +219,94 @@ h1 {
   letter-spacing: -0.02em;
 }
 
+/* Project indicator tijdens het lopen */
+.running-project {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  color: #666;
+  text-transform: uppercase;
+}
+
+/* Pre-start invoervelden (project + schatting) */
+.pre-start-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+.pre-start-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.project-input {
+  width: 180px !important;
+  font-family: 'Space Grotesk', sans-serif !important;
+  font-size: 0.85rem !important;
+  color: #aaa !important;
+}
+
+.project-input::placeholder {
+  color: #383838;
+}
+
+.project-input:focus {
+  color: #f0f0f0!important;
+}
+
 /* SESSIONS */
 .entries-section {
   padding-bottom: 40px;
 }
 
 .no-entries {
-  color: #2a2a2a;
+  color: #484848;
   font-size: 0.85rem;
   letter-spacing: 0.05em;
   padding: 24px 0;
+}
+
+/* Project groepen */
+.project-group {
+  margin-top: 20px;
+}
+
+.project-group:first-child {
+  margin-top: 8px;
+}
+
+.project-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #1e1e1e;
+  margin-bottom: 0;
+}
+
+.project-group-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: #c8c8c8;
+  text-transform: uppercase;
+}
+
+.project-group-none {
+  color: #383838;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.project-group-total {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: #787878;
 }
 
 .entries-list {
@@ -274,15 +355,15 @@ h1 {
   gap: 10px;
   font-family: 'Space Mono', monospace;
   font-size: 0.8rem;
-  color: #555;
+  color: #787878;
 }
 
 .entry.active .entry-time {
-  color: #888;
+  color: #aaa;
 }
 
 .separator {
-  color: #2a2a2a;
+  color: #383838;
 }
 
 .running-badge {
@@ -318,7 +399,7 @@ h1 {
 .entry-duration {
   font-family: 'Space Mono', monospace;
   font-size: 0.85rem;
-  color: #888;
+  color: #909090;
 }
 
 .entry.active .entry-duration {

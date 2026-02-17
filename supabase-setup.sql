@@ -32,3 +32,6 @@ CREATE POLICY "Own entries only" ON time_entries
 
 -- Facultatieve schatting in minuten (voor feature "hoeveel tijd denk ik nodig te hebben")
 ALTER TABLE time_entries ADD COLUMN IF NOT EXISTS estimated_minutes INTEGER;
+
+-- Facultatief projectnaam veld
+ALTER TABLE time_entries ADD COLUMN IF NOT EXISTS project_name TEXT;
