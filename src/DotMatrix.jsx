@@ -1,8 +1,8 @@
 // DotMatrix — SVG dot-grid renderer voor cijfers en de dubbele punt
 // Elke character is een 5×7 grid van cirkels
 
-const DOT_SIZE = 5      // diameter van elke dot in px
-const GAP = 3           // ruimte tussen dots
+const DOT_SIZE = 6      // diameter van elke dot in px  (+20%)
+const GAP = 3.6         // ruimte tussen dots            (+20%)
 const STEP = DOT_SIZE + GAP
 
 const COLS = 5

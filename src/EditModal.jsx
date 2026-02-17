@@ -25,6 +25,7 @@ function buildUpdatedISO(originalISO, newTime) {
 
 export default function EditModal({ entry, onClose, onSaved }) {
   const [endTime, setEndTime] = useState('')
+  const [projectName, setProjectName] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
 
@@ -32,7 +33,7 @@ export default function EditModal({ entry, onClose, onSaved }) {
     if (entry?.end_time) {
       setEndTime(toTimeInput(entry.end_time))
     }
-    // Sluit modal op Escape
+    setProjectName(entry?.project_name || '')
     const onKey = (e) => { if (e.key === 'Escape') onClose() }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -54,10 +55,15 @@ export default function EditModal({ entry, onClose, onSaved }) {
     }
 
     const durationSeconds = Math.floor((newEnd - start) / 1000)
+    const trimmed = projectName.trim()
 
     const { error: supaError } = await supabase
       .from('time_entries')
-      .update({ end_time: newEndISO, duration_seconds: durationSeconds })
+      .update({
+        end_time: newEndISO,
+        duration_seconds: durationSeconds,
+        project_name: trimmed || null,
+      })
       .eq('id', entry.id)
 
     if (supaError) {
@@ -73,7 +79,7 @@ export default function EditModal({ entry, onClose, onSaved }) {
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
-        <p className="modal-label">EINDTIJD AANPASSEN</p>
+        <p className="modal-label">SESSIE AANPASSEN</p>
 
         <div className="modal-meta">
           <span>Start</span>
@@ -90,6 +96,18 @@ export default function EditModal({ entry, onClose, onSaved }) {
               onChange={e => setEndTime(e.target.value)}
               required
               autoFocus
+            />
+          </div>
+
+          <div className="field">
+            <label className="field-label">PROJECT</label>
+            <input
+              className="field-input"
+              type="text"
+              placeholder="optioneel"
+              maxLength={60}
+              value={projectName}
+              onChange={e => setProjectName(e.target.value)}
             />
           </div>
 
