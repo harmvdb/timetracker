@@ -1,15 +1,22 @@
 import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
 
+// Zorg dat Supabase timestamps altijd als UTC geparsed worden
+function safeDate(isoString) {
+  if (!isoString) return new Date()
+  const s = isoString.endsWith('Z') || isoString.includes('+') ? isoString : isoString + 'Z'
+  return new Date(s)
+}
+
 // Zet een ISO-string om naar "HH:MM" voor in het time-input veld
 function toTimeInput(isoString) {
-  const d = new Date(isoString)
+  const d = safeDate(isoString)
   return d.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit', hour12: false })
 }
 
 // Combineer de datum van het origineel met een nieuwe "HH:MM" tijd → ISO string
 function buildUpdatedISO(originalISO, newTime) {
-  const original = new Date(originalISO)
+  const original = safeDate(originalISO)
   const [h, m] = newTime.split(':').map(Number)
   const updated = new Date(original)
   updated.setHours(h, m, 0, 0)
@@ -38,7 +45,7 @@ export default function EditModal({ entry, onClose, onSaved }) {
 
     const newEndISO = buildUpdatedISO(entry.end_time, endTime)
     const newEnd = new Date(newEndISO)
-    const start = new Date(entry.start_time)
+    const start = safeDate(entry.start_time)
 
     if (newEnd <= start) {
       setError('Eindtijd moet na de starttijd liggen.')

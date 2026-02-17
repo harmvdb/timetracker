@@ -114,9 +114,7 @@ export default function TimeTracker({ session }) {
     if (!currentEntry) return
     try {
       const now             = new Date().toISOString()
-      const start           = new Date(currentEntry.start_time)
-      const end             = new Date(now)
-      const durationSeconds = Math.floor((end - start) / 1000)
+      const durationSeconds = Math.floor((Date.now() - startedAt) / 1000)
 
       const { error } = await supabase
         .from('time_entries')
