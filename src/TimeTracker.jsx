@@ -47,12 +47,15 @@ export default function TimeTracker() {
     let interval
 
     if (isRunning && currentEntry) {
-      interval = setInterval(() => {
+      // Bereken direct bij het starten zodat er geen initiële sprong is
+      const calc = () => {
         const start = new Date(currentEntry.start_time)
         const now = new Date()
         const seconds = Math.floor((now - start) / 1000)
-        setElapsedSeconds(seconds)
-      }, 1000)
+        setElapsedSeconds(Math.max(0, seconds))
+      }
+      calc()
+      interval = setInterval(calc, 1000)
     } else {
       setElapsedSeconds(0)
     }
@@ -138,12 +141,15 @@ export default function TimeTracker() {
     return total
   }
 
-  // Format seconden naar uu:mm:ss
+  // Format seconden naar mm:ss of uu:mm:ss (uur alleen tonen als >= 3600s)
   const formatTime = (seconds) => {
     const hrs = Math.floor(seconds / 3600)
     const mins = Math.floor((seconds % 3600) / 60)
     const secs = seconds % 60
-    return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+    if (hrs > 0) {
+      return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+    }
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
   }
 
   // Format seconden naar leesbare tekst
@@ -170,32 +176,45 @@ export default function TimeTracker() {
   const totalSeconds = calculateTotalTime()
 
   if (loading) {
-    return <div className="container">Laden...</div>
+    return (
+      <div className="container">
+        <div className="loading">LADEN</div>
+      </div>
+    )
   }
 
   return (
     <div className="container">
-      <h1>⏱️ Time Tracker</h1>
+      <header className="header">
+        <span className="header-dot" />
+        <h1>TIME TRACKER</h1>
+      </header>
 
       <div className="timer-display">
-        <div className="time">{formatTime(elapsedSeconds)}</div>
+        <div className={`time ${isRunning ? 'time--running' : ''}`}>
+          {formatTime(elapsedSeconds)}
+        </div>
         <button
           className={`btn ${isRunning ? 'btn-stop' : 'btn-start'}`}
           onClick={isRunning ? handleStop : handleStart}
         >
-          {isRunning ? '⏹ STOP' : '▶ START'}
+          {isRunning ? 'STOP' : 'START'}
         </button>
       </div>
 
+      <div className="divider" />
+
       <div className="total-section">
-        <h2>Totaal vandaag</h2>
+        <span className="label">VANDAAG</span>
         <div className="total-time">{formatDuration(totalSeconds)}</div>
       </div>
 
+      <div className="divider" />
+
       <div className="entries-section">
-        <h2>Sessies vandaag</h2>
+        <span className="label">SESSIES</span>
         {todayEntries.length === 0 ? (
-          <p className="no-entries">Nog geen sessies vandaag</p>
+          <p className="no-entries">Geen sessies vandaag</p>
         ) : (
           <div className="entries-list">
             {todayEntries.map(entry => (
@@ -204,12 +223,12 @@ export default function TimeTracker() {
                   <span className="start">{formatDateTime(entry.start_time)}</span>
                   {entry.end_time && (
                     <>
-                      <span className="separator">→</span>
+                      <span className="separator">—</span>
                       <span className="end">{formatDateTime(entry.end_time)}</span>
                     </>
                   )}
                   {!entry.end_time && (
-                    <span className="running-badge">Bezig...</span>
+                    <span className="running-badge">LIVE</span>
                   )}
                 </div>
                 <div className="entry-duration">
