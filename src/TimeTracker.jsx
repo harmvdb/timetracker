@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
 
-export default function TimeTracker() {
+export default function TimeTracker({ session }) {
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+  }
   const [isRunning, setIsRunning] = useState(false)
   const [currentEntry, setCurrentEntry] = useState(null)
   const [startedAt, setStartedAt] = useState(null)   // client-side Date object, betrouwbaar
@@ -72,10 +75,13 @@ export default function TimeTracker() {
       const clickedAt = Date.now()           // bewaar exact moment van klikken
       const nowISO = new Date(clickedAt).toISOString()
 
+      const { data: { user } } = await supabase.auth.getUser()
+
       const { data, error } = await supabase
         .from('time_entries')
         .insert([
           {
+            user_id: user.id,
             start_time: nowISO,
             end_time: null,
             duration_seconds: 0
@@ -194,6 +200,10 @@ export default function TimeTracker() {
       <header className="header">
         <span className="header-dot" />
         <h1>TIME TRACKER</h1>
+        <div className="header-right">
+          <span className="header-email">{session?.user?.email}</span>
+          <button className="btn-logout" onClick={handleLogout}>UITLOGGEN</button>
+        </div>
       </header>
 
       <div className="timer-display">

@@ -210,6 +210,157 @@ h1 {
   color: #f0f0f0;
 }
 
+/* HEADER RIGHT (logout) */
+.header-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-email {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: #333;
+}
+
+.btn-logout {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  background: transparent;
+  border: 1px solid #222;
+  color: #333;
+  cursor: pointer;
+  padding: 6px 14px;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+  border-color: #f0f0f0;
+  color: #f0f0f0;
+}
+
+/* AUTH / LOGIN */
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 56px;
+}
+
+.auth-title {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: #f0f0f0;
+}
+
+.auth-label {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: #444;
+  margin-bottom: 32px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: #444;
+}
+
+.field-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #222;
+  color: #f0f0f0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.95rem;
+  padding: 10px 0;
+  outline: none;
+  transition: border-color 0.2s ease;
+  width: 100%;
+}
+
+.field-input:focus {
+  border-bottom-color: #f0f0f0;
+}
+
+.field-input::placeholder {
+  color: #333;
+}
+
+.auth-submit {
+  margin-top: 8px;
+  align-self: flex-start;
+}
+
+.auth-submit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.auth-message {
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  padding: 12px 0;
+}
+
+.auth-message--error {
+  color: #888;
+}
+
+.auth-message--success {
+  color: #f0f0f0;
+}
+
+.auth-link {
+  display: inline-block;
+  margin-top: 28px;
+  background: none;
+  border: none;
+  color: #333;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.auth-link:hover {
+  color: #888;
+}
+
 /* LOADING */
 .loading {
   font-size: 0.65rem;

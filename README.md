@@ -51,7 +51,38 @@ CREATE POLICY "Allow all access" ON time_entries
   WITH CHECK (true);
 ```
 
-### 3. Haal je API credentials op
+### 3. Zet authenticatie aan en maak jouw account
+
+De app gebruikt Supabase Auth. Je moet één keer handmatig jouw gebruikersaccount aanmaken:
+
+1. Ga in je Supabase dashboard naar **Authentication → Users**
+2. Klik op **"Invite user"** (of "Add user")
+3. Vul jouw e-mailadres en een sterk wachtwoord in
+4. Klik op **"Create user"**
+
+Dat is je enige account — de app heeft geen registratiescherm.
+
+#### RLS aanpassen zodat alleen jij je eigen data ziet
+
+Voer in de SQL Editor dit uit (vervang het UUID door jouw eigen user-id, te vinden in Authentication → Users):
+
+```sql
+-- Verwijder de open policy van eerder
+DROP POLICY IF EXISTS "Allow all access" ON time_entries;
+
+-- Alleen ingelogde gebruiker ziet zijn eigen entries
+CREATE POLICY "Own entries only" ON time_entries
+  FOR ALL
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+-- Voeg user_id kolom toe aan de tabel
+ALTER TABLE time_entries ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id);
+```
+
+> **Let op:** Na het toevoegen van `user_id` vult de app dit automatisch in via de Supabase auth sessie. Bestaande rijen zonder `user_id` zijn daarna niet meer zichtbaar — dat is bewust.
+
+### 4. Haal je API credentials op
 
 1. Ga naar Project Settings → API
 2. Kopieer je:
