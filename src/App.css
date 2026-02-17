@@ -1,14 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
-/* DSEG7 — clean 7-segment LCD display font */
-@font-face {
-  font-family: 'DSEG7';
-  src: url('https://cdn.jsdelivr.net/npm/dseg@0.46.0/fonts/DSEG7-Classic/DSEG7Classic-Regular.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -69,20 +60,10 @@ h1 {
 }
 
 .time {
-  font-family: 'DSEG7', 'Courier New', monospace;
-  font-size: 5rem;
-  font-weight: 400;
-  /* Dimmed segmenten: het display is "aan" maar de nul-stand is donker */
-  color: #1e1e1e;
-  line-height: 1;
-  letter-spacing: 0.04em;
-  transition: color 0.4s ease;
+  /* Wrapper voor de SVG dot-matrix — geen font nodig */
+  display: block;
+  line-height: 0;
   user-select: none;
-}
-
-.time--running {
-  /* Actieve segmenten: helder maar niet wit — typisch LCD groenachtig grijs */
-  color: #c8c8c8;
 }
 
 /* Schatting indicator naast de lopende timer */

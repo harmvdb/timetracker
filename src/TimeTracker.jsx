@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
 import EditModal from './EditModal'
+import DotMatrix from './DotMatrix'
 
 export default function TimeTracker({ session }) {
   const handleLogout = async () => { await supabase.auth.signOut() }
@@ -184,8 +185,8 @@ export default function TimeTracker({ session }) {
       {/* ── Timer ── */}
       <div className="timer-display">
         <div className="timer-row">
-          <div className={`time ${isRunning ? 'time--running' : ''}`}>
-            {formatTime(elapsedSeconds)}
+          <div className="time">
+            <DotMatrix text={formatTime(elapsedSeconds)} active={isRunning} />
           </div>
           {isRunning && currentEntry?.estimated_minutes && (
             <span className="estimate-badge">
