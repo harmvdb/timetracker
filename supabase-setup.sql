@@ -29,3 +29,6 @@ CREATE POLICY "Own entries only" ON time_entries
   FOR ALL
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
+
+-- Facultatieve schatting in minuten (voor feature "hoeveel tijd denk ik nodig te hebben")
+ALTER TABLE time_entries ADD COLUMN IF NOT EXISTS estimated_minutes INTEGER;
