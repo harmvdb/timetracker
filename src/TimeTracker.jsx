@@ -4,6 +4,7 @@ import { supabase } from './supabaseClient'
 export default function TimeTracker() {
   const [isRunning, setIsRunning] = useState(false)
   const [currentEntry, setCurrentEntry] = useState(null)
+  const [startedAt, setStartedAt] = useState(null)   // client-side Date object, betrouwbaar
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
   const [todayEntries, setTodayEntries] = useState([])
   const [loading, setLoading] = useState(true)
@@ -28,6 +29,10 @@ export default function TimeTracker() {
       const activeEntry = data?.find(entry => !entry.end_time)
       if (activeEntry) {
         setCurrentEntry(activeEntry)
+        // Zorg dat de timestamp altijd als UTC geparsed wordt (voeg Z toe als die ontbreekt)
+        const rawStart = activeEntry.start_time
+        const isoStart = rawStart.endsWith('Z') || rawStart.includes('+') ? rawStart : rawStart + 'Z'
+        setStartedAt(new Date(isoStart).getTime())
         setIsRunning(true)
       }
     } catch (error) {
@@ -43,15 +48,13 @@ export default function TimeTracker() {
   }, [])
 
   // Timer die elke seconde tikt
+  // Gebruikt startedAt (client-side Date) om tijdzone-issues met Supabase strings te vermijden
   useEffect(() => {
     let interval
 
-    if (isRunning && currentEntry) {
-      // Bereken direct bij het starten zodat er geen initiële sprong is
+    if (isRunning && startedAt) {
       const calc = () => {
-        const start = new Date(currentEntry.start_time)
-        const now = new Date()
-        const seconds = Math.floor((now - start) / 1000)
+        const seconds = Math.floor((Date.now() - startedAt) / 1000)
         setElapsedSeconds(Math.max(0, seconds))
       }
       calc()
@@ -61,18 +64,19 @@ export default function TimeTracker() {
     }
 
     return () => clearInterval(interval)
-  }, [isRunning, currentEntry])
+  }, [isRunning, startedAt])
 
   // Start knop
   const handleStart = async () => {
     try {
-      const now = new Date().toISOString()
+      const clickedAt = Date.now()           // bewaar exact moment van klikken
+      const nowISO = new Date(clickedAt).toISOString()
 
       const { data, error } = await supabase
         .from('time_entries')
         .insert([
           {
-            start_time: now,
+            start_time: nowISO,
             end_time: null,
             duration_seconds: 0
           }
@@ -83,6 +87,7 @@ export default function TimeTracker() {
       if (error) throw error
 
       setCurrentEntry(data)
+      setStartedAt(clickedAt)               // gebruik client-side timestamp, niet Supabase string
       setIsRunning(true)
       setElapsedSeconds(0)
     } catch (error) {
@@ -113,6 +118,7 @@ export default function TimeTracker() {
 
       setIsRunning(false)
       setCurrentEntry(null)
+      setStartedAt(null)
       setElapsedSeconds(0)
 
       // Refresh de lijst
