@@ -21,30 +21,30 @@ const GLYPHS = {
   ],
   '1': [
     [0,0,1,0,0],
-    [0,1,1,0,0],
     [0,0,1,0,0],
     [0,0,1,0,0],
     [0,0,1,0,0],
     [0,0,1,0,0],
-    [0,1,1,1,0],
+    [0,0,1,0,0],
+    [0,0,1,0,0],
   ],
   '2': [
     [0,1,1,1,0],
     [1,0,0,0,1],
     [0,0,0,0,1],
     [0,0,1,1,0],
-    [0,1,0,0,0],
+    [0,1,1,0,0],
     [1,0,0,0,0],
     [1,1,1,1,1],
   ],
   '3': [
-    [1,1,1,1,0],
+    [0,1,1,1,0],
     [0,0,0,0,1],
     [0,0,0,0,1],
     [0,1,1,1,0],
     [0,0,0,0,1],
     [0,0,0,0,1],
-    [1,1,1,1,0],
+    [0,1,1,1,0],
   ],
   '4': [
     [0,0,0,1,0],
@@ -100,20 +100,21 @@ const GLYPHS = {
     [0,0,0,0,1],
     [0,1,1,1,0],
   ],
+  // Colon: 3 kolommen breed (kolom 0=leeg, 1=dot, 2=leeg)
   ':': [
-    [0,0,0,0,0],
-    [0,0,1,0,0],
-    [0,0,1,0,0],
-    [0,0,0,0,0],
-    [0,0,1,0,0],
-    [0,0,1,0,0],
-    [0,0,0,0,0],
+    [0,0,0],
+    [0,1,0],
+    [0,1,0],
+    [0,0,0],
+    [0,1,0],
+    [0,1,0],
+    [0,0,0],
   ],
 }
 
-const CHAR_W  = COLS * STEP               // breedte van één karakter incl. dots
-const CHAR_H  = ROWS * STEP              // hoogte
-const COLON_W = 3 * STEP                 // dubbele punt is smaller
+const CHAR_W   = COLS * STEP             // breedte cijfer (5 kolommen)
+const CHAR_H   = ROWS * STEP             // hoogte
+const COLON_W  = 3 * STEP               // colon bitmap is 3 kolommen breed
 const CHAR_GAP = 8                       // ruimte tussen karakters
 
 function charWidth(ch) {
@@ -129,19 +130,17 @@ function totalWidth(text) {
   return w
 }
 
-function GlyphSVG({ char, x, active, dotColor, dimColor }) {
+function GlyphSVG({ char, x, dotColor, dimColor }) {
   const glyph = GLYPHS[char]
   if (!glyph) return null
-  const cols = char === ':' ? 3 : COLS
-  const offsetX = char === ':' ? STEP : 0   // center the colon dots
 
   return (
     <>
       {glyph.map((row, r) =>
-        row.slice(0, cols).map((on, c) => (
+        row.map((on, c) => (
           <circle
             key={`${r}-${c}`}
-            cx={x + offsetX + c * STEP + DOT_SIZE / 2}
+            cx={x + c * STEP + DOT_SIZE / 2}
             cy={r * STEP + DOT_SIZE / 2}
             r={DOT_SIZE / 2}
             fill={on ? dotColor : dimColor}
@@ -154,7 +153,7 @@ function GlyphSVG({ char, x, active, dotColor, dimColor }) {
 
 export default function DotMatrix({ text, active = false }) {
   const dotColor = active ? '#c8c8c8' : '#1e1e1e'
-  const dimColor = active ? '#252525' : '#141414'
+  const dimColor = active ? '#222222' : '#141414'
 
   const svgW = totalWidth(text)
   const svgH = CHAR_H
@@ -177,7 +176,6 @@ export default function DotMatrix({ text, active = false }) {
             key={i}
             char={ch}
             x={x}
-            active={active}
             dotColor={dotColor}
             dimColor={dimColor}
           />
